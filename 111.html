@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .buttons {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .search-box {
+            margin: 20px 0;
+        }
+    </style>
+    <title>Сайт Сергея Николаевича</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Сайт Сергея Николаевича</h1>
+        <img src= "77.jpg" alt="Городской пейзаж">
+        <div class="buttons">
+            <button onclick="location.href='index1.html'">Страница 1</button>
+            <button onclick="location.href='page2.html'">Страница 2</button>
+        </div>
+        <div class="search-box">
+            <form action="https://yandex.ru/search/" method="get">
+                <input type="text" name="text" placeholder="Поиск..." required>
+                <input type="submit" value="Найти">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
