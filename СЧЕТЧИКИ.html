@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Калькулятор расходов</title>
+		<style>
+			        body {
+			            display: flex;
+			            justify-content: center;
+			            align-items: center;
+			            height: 100vh;
+			            background-image: url('77.jpg');
+				    background-size: cover; /* Обеспечивает, что изображение покроет весь экран */
+				    background-repeat: no-repeat; /* Запрещает повторение изображения */
+				    background-position: center; /* Центрирует изображение */
+
+			            font-family: Arial, sans-serif;
+
+
+			        }
+			        .container {
+			            position: absolute;
+			                                 top: 10px;
+			            background: #B0E0E6;
+			            padding: 7px;
+			            border-radius: 10px;
+			            box-shadow: 0 0 7px rgba(0, 0, 0, 0.1);
+			            width: 28%;
+			            max-width: 750px;
+			            right: 600px;
+			            border: 5px solid #4682B4;
+
+			        }
+
+			        .container1 {
+			            position: absolute;
+			           /* border: 5px solid Silver; */
+			            padding: 20px;
+			           /* border-radius: 10px; */
+			            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			            width: 50%;
+			            max-width: 400px;
+			            top: 80px;
+			            right: 200px;
+			           /* background-color: blue; */
+			            color: blue;
+			            max-width: 200px;
+			            background-image: url("41.jpg");
+			            object-fit: contain;
+			}
+
+			input {
+			    margin: 1px 0; /* уменьшено расстояние между блоками */
+			    padding: 3px; /* можно уменьшить padding, если необходимо */
+			    border: 2px solid orange;
+			    border-radius: 10px;
+			    width: 60%;
+			    font-size: 24px;
+			    color: #FF0000;
+			}
+
+			button {
+			    width: 100%;
+			    padding: 10px;
+			    margin-top: 3px; /* уменьшено расстояние между кнопкой и предыдущим блоком */
+			    border: 5px solid Silver;
+			    border-radius: 15px;
+			    cursor: pointer;
+			    font-size: 18px; /* этот размер можно оставлять таким */
+			}
+			        button#calculate {
+			            background-color: green;
+			            color: white;
+			            width: 100%;
+
+			        }
+			        button#reset-data {
+			            position: relative;
+			            top: -225px;
+			            background-color: #f44336;
+			            color: white;
+			            right: -470px;
+			        }
+			        h2 {
+			            text-align: center;
+			        }
+			        .output {
+			            margin: 20px 0;
+			            text-align: center;
+			            font-size: 18px;
+                                    
+
+			        }
+			        h4 {
+			            margin-right: 10px;
+			        }
+			                             h1 {
+			            font-family: MS Serif, New York, serif;
+			            color: blue;
+			        }
+			                             h4 {
+			            font-family: MS Serif, New York, serif;
+			            color: #008000;
+			            font-size: 20px;
+
+			        }
+                                 button#download-results {
+                                    background-color: #B57900;
+			            color: white;
+			        }
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Калькулятор расхода</h1>
+			<h4>свет Т1&nbsp; <input type="number" id="t1" placeholder="Т1" /></h4>
+			<h4>свет Т2 &nbsp;<input type="number" id="t2" placeholder="Т2" /></h4>
+			<h4>свет Т3 &nbsp;<input type="number" id="t3" placeholder="Т3" /></h4>
+                        <h4>хол вод &nbsp;<input type="number" id="hWater" placeholder="Холодная вода " /></h4>
+			<h4>гор вод&nbsp; <input type="number" id="gWater" placeholder="Горячая вода " /></h4>
+			
+			<button id="calculate">Рассчитать</button>
+		</div>
+
+		<div id="bottom">
+			<button id="reset-data">Сбросить данные</button>
+			<div class="container1">
+				<div id="total-output" class="output"></div>
+				<button id="download-results">Скачать результаты</button>
+				<!-- Кнопка для скачивания -->
+			</div>
+		</div>
+
+		<script>
+			const previousValues = JSON.parse(localStorage.getItem('previousValues')) || {};
+
+			function displayPreviousValues() {
+			    const today = new Date();
+			    const formattedDate = today.toISOString().split('T')[0];
+
+			    if (previousValues[formattedDate]) {
+			        const values = previousValues[formattedDate];
+			        document.getElementById('t1').value = values.t1 || ''; // Устанавливаем значение T1
+			        document.getElementById('t2').value = values.t2 || ''; // Устанавливаем значение T2
+			        document.getElementById('t3').value = values.t3 || ''; // Устанавливаем значение T3
+			        document.getElementById('hWater').value = values.hWater || ''; // Устанавливаем значение ГВ
+			        document.getElementById('gWater').value = values.gWater || ''; // Устанавливаем значение ХВ
+
+			        document.getElementById('total-output').innerText = `Дата: ${formattedDate}\nT1: ${values.t1 || 0} кВт\nT2: ${values.t2 || 0} кВт\nT3: ${values.t3 || 0} кВт\nГВ: ${values.hWater || 0} куб.\nХВ: ${values.gWater || 0} куб.`;
+			    }
+			}
+
+			window.onload = function() {
+			    displayPreviousValues();
+
+			    const calculateButton = document.getElementById('calculate');
+			    calculateButton.addEventListener('click', function() {
+			        const t1NewValue = parseFloat(document.getElementById('t1').value) || 0;
+			        const t2NewValue = parseFloat(document.getElementById('t2').value) || 0;
+			        const t3NewValue = parseFloat(document.getElementById('t3').value) || 0;
+			        const hWaterNewValue = parseFloat(document.getElementById('hWater').value) || 0;
+			        const gWaterNewValue = parseFloat(document.getElementById('gWater').value) || 0;
+
+			        const t1Cost = 8.94;
+			        const t2Cost = 3.02;
+			        const t3Cost = 6.15;
+			        const hWaterCost = 59.80;
+			        const gWaterCost = 272.14;
+			        const vodootvodCost = 45.91;
+
+			        let t1PreviousValue = 0, t2PreviousValue = 0, t3PreviousValue = 0, hWaterPreviousValue = 0, gWaterPreviousValue = 0, vodootvodPreviousValue = 0;
+
+			        const today = new Date();
+			        const formattedDate = today.toISOString().split('T')[0];
+			        if (previousValues[formattedDate]) {
+			            t1PreviousValue = previousValues[formattedDate].t1 || 0;
+			            t2PreviousValue = previousValues[formattedDate].t2 || 0;
+			            t3PreviousValue = previousValues[formattedDate].t3 || 0;
+			            hWaterPreviousValue = previousValues[formattedDate].hWater || 0;
+			            gWaterPreviousValue = previousValues[formattedDate].gWater || 0;
+			            vodootvodPreviousValue = hWaterPreviousValue + gWaterPreviousValue;
+			        }
+
+			        const t1Difference = t1NewValue - t1PreviousValue;
+			        const t2Difference = t2NewValue - t2PreviousValue;
+			        const t3Difference = t3NewValue - t3PreviousValue;
+			        const hWaterDifference = hWaterNewValue - hWaterPreviousValue;
+			        const gWaterDifference = gWaterNewValue - gWaterPreviousValue;
+			        const vodootvodNewValue = hWaterNewValue + gWaterNewValue;
+			        const vodootvodDifference = vodootvodNewValue - vodootvodPreviousValue;
+
+			        const totalSum = (t1Difference * t1Cost + t2Difference * t2Cost + t3Difference * t3Cost) +
+			                        (hWaterDifference * hWaterCost + gWaterDifference * gWaterCost) +
+			                        (vodootvodDifference * vodootvodCost);
+
+			        // Формирование вывода в нужном формате
+			        let output = `Дата: ${formattedDate}\n`;
+			        output += `Т1: ${t1Difference.toFixed(2)} кВт, ${ (t1Difference * t1Cost).toFixed(2) } руб\n`;
+			        output += `Т2: ${t2Difference.toFixed(2)} кВт, ${ (t2Difference * t2Cost).toFixed(2) } руб\n`;
+			        output += `Т3: ${t3Difference.toFixed(2)} кВт, ${ (t3Difference * t3Cost).toFixed(2) } руб\n`;
+			        output += `ХВ: ${hWaterDifference.toFixed(2)} куб., ${ (hWaterDifference * hWaterCost).toFixed(2) } руб\n`;
+			        output += `ГВ: ${gWaterDifference.toFixed(2)} куб., ${ (gWaterDifference * gWaterCost).toFixed(2) } руб\n`;
+			        output += `Водоотвод: ${vodootvodDifference.toFixed(2)} куб., стоимость: ${ (vodootvodDifference * vodootvodCost).toFixed(2)} руб\n`;
+			        output += `Итого: ${totalSum.toFixed(2)} руб\n`;
+
+			        document.getElementById('total-output').innerText = output;
+
+			        // Сохранение данных в localStorage с учетом даты
+			        previousValues[formattedDate] = {
+			            t1: t1NewValue,
+			            t2: t2NewValue,
+			            t3: t3NewValue,
+			            hWater: hWaterNewValue,
+			            gWater: gWaterNewValue,
+			            vodootvod: vodootvodNewValue
+			        };
+			        localStorage.setItem('previousValues', JSON.stringify(previousValues));
+			    });
+
+			    document.getElementById('reset-data').addEventListener('click', function() {
+			        localStorage.removeItem('previousValues');
+			        alert('Данные успешно сброшены.');
+			        document.getElementById('total-output').innerText = '';
+			        displayPreviousValues();
+			    });
+
+			    document.getElementById('download-results').addEventListener('click', function() {
+			        const outputText = document.getElementById('total-output').innerText;
+			        const blob = new Blob([outputText], {type: 'text/plain'});
+			        const url = URL.createObjectURL(blob);
+			        const a = document.createElement('a');
+			        a.href = url;
+			        a.download = 'результаты.txt'; // Имя файла для скачивания
+			        document.body.appendChild(a);
+			        a.click();
+			        document.body.removeChild(a);
+			        URL.revokeObjectURL(url);
+			    });
+			};
+		</script>
+	</body>
+</html>
